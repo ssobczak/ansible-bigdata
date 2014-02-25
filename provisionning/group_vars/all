@@ -1,0 +1,4 @@
+zookeeper:
+    clientport: 2181
+    leader_port: 2888
+    election_port: 3888

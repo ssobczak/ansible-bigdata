@@ -1,0 +1,35 @@
+---
+# The plays for mesos masters
+
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  sudo: true
+
+- name: Install dependencies
+  apt: name=$item state=installed
+  with_items:
+    - build-essential
+    - openjdk-6-jdk
+    - python-dev
+    - libcurl4-nss-dev
+    - libsasl2-dev
+  sudo: true
+
+- name: Fetch mesos
+  get_url: url=http://www.apache.org/dist/mesos/0.16.0/mesos-0.16.0.tar.gz dest=/home/vagrant/mesos-0.16.0.tar.gz
+
+- name: Unzip mesos
+  command: tar -xvf /home/vagrant/mesos-0.16.0.tar.gz
+
+- name: Create build dir
+  command: mkdir build chdir=/home/vagrant/mesos-0.16.0 creates=/home/vagrant/mesos-0.16.0/build
+
+- name: Configure mesos
+  command: ../configure chdir=/home/vagrant/mesos-0.16.0/build
+
+- name: Make mesos
+  command: make -j chdir=/home/vagrant/mesos-0.16.0/build
+
+- name: Install mesos
+  command: make install chdir=/home/vagrant/mesos-0.16.0/build
+  sudo: true

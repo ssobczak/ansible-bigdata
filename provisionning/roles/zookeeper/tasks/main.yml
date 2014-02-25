@@ -1,0 +1,19 @@
+---
+# The plays for zookeper daemons
+
+- name: update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  sudo: true
+
+- name: Install the zookeeper files
+  apt: name=zookeeperd state=installed
+  sudo: true
+
+- name: Copy the configuration file for zookeeper
+  template: src=zoo.cfg.j2 dest=/etc/zookeeper/conf/zoo.cfg
+  sudo: true
+  notify: restart zookeeper
+
+- name: initialize the zookeper
+  shell: creates=/var/lib/zookeeper/myid service zookeeper-server init --myid=${zoo_id}
+

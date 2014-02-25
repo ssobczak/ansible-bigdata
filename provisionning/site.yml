@@ -1,0 +1,8 @@
+---
+- hosts: zookeepers
+  roles:
+  - { role: zookeeper }
+
+- hosts: mesos-masters
+  roles:
+  - { role: mesos-master }

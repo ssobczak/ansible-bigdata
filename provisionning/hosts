@@ -1,0 +1,5 @@
+[zookeepers]
+10.77.0.2 zoo_id=1
+
+[mesos-masters]
+10.77.1.2
