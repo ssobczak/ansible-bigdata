@@ -1,0 +1,9 @@
+---
+# Handler for the mesos services
+
+- name: restart mesos
+  service: name=$item state=restarted
+  with_items:
+  - mesos-master
+  - mesos-slave
+  sudo: true

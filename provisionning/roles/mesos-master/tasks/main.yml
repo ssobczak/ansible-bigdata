@@ -1,35 +1,31 @@
 ---
 # The plays for mesos masters
 
-- name: Update apt cache
-  apt: update_cache=yes cache_valid_time=3600
-  sudo: true
-
 - name: Install dependencies
   apt: name=$item state=installed
   with_items:
-    - build-essential
-    - openjdk-6-jdk
-    - python-dev
-    - libcurl4-nss-dev
-    - libsasl2-dev
+    - default-jre
+    - python-setuptools
+    - python-protobuf
+    - libcurl3
   sudo: true
 
 - name: Fetch mesos
-  get_url: url=http://www.apache.org/dist/mesos/0.16.0/mesos-0.16.0.tar.gz dest=/home/vagrant/mesos-0.16.0.tar.gz
-
-- name: Unzip mesos
-  command: tar -xvf /home/vagrant/mesos-0.16.0.tar.gz
-
-- name: Create build dir
-  command: mkdir build chdir=/home/vagrant/mesos-0.16.0 creates=/home/vagrant/mesos-0.16.0/build
-
-- name: Configure mesos
-  command: ../configure chdir=/home/vagrant/mesos-0.16.0/build
-
-- name: Make mesos
-  command: make -j chdir=/home/vagrant/mesos-0.16.0/build
+  get_url: url=http://downloads.mesosphere.io/master/ubuntu/13.04/mesos_0.16.0_amd64.deb dest=/vagrant/mesos.deb
 
 - name: Install mesos
-  command: make install chdir=/home/vagrant/mesos-0.16.0/build
+  command: dpkg -i /vagrant/mesos.deb creates=/usr/local/bin/mesos
   sudo: true
+
+- name: Fetch install scripts
+  get_url: url=http://downloads.mesosphere.io/master/ubuntu/12.04/mesos_0.16.0_amd64.egg dest=/vagrant/mesos.egg
+
+- name: Easy_install mesos
+  command: easy_install /vagrant/mesos.egg creates=/usr/local/lib/python2.7/dist-packages/mesos.egg
+  sudo: true
+  notify: restart mesos
+
+- name: Copy the config for mesos
+  template: src=zk.j2 dest=/etc/mesos/zk
+  sudo: true
+  notify: restart mesos

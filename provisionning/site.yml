@@ -1,8 +1,12 @@
 ---
+- hosts: all
+  roles:
+   - common
+
 - hosts: zookeepers
   roles:
-  - { role: zookeeper }
+  - zookeeper
 
 - hosts: mesos-masters
   roles:
-  - { role: mesos-master }
+  - mesos-master

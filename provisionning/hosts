@@ -1,5 +1,10 @@
+[all:children]
+zookeepers
+mesos-masters
+
 [zookeepers]
-10.77.0.2 zoo_id=1
+10.77.0.2 host=zk1 zoo_id=1
 
 [mesos-masters]
-10.77.1.2
+10.77.1.2 host=master1
+10.77.1.3 host=master2

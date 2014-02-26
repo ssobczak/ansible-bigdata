@@ -1,0 +1,5 @@
+127.0.0.1 localhost
+
+{% for k,v in hostvars.iteritems() %}
+{{ k }} {{ hostvars[k]['host'] }}
+{% endfor %}
